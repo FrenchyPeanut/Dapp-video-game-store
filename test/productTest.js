@@ -27,3 +27,26 @@ it("Should have the Game item in the store", async() => {
     assert.isFalse(item[5], "The item should not be sent.");
     assert.isFalse(item[6], "The item should not be received.");
 });
+
+it("Should have the Game item in the store", async() => {
+    try{
+        let sentItem = await product.sentItem(0, {
+            from: seller
+        });
+        // If the test actually works, we throw an error . . .
+        assert.fail();
+    }catch(e){
+        assert.match(e.toString(), /revert/, "Transaction should have reverted.");
+    }
+});
+
+it("Should buy an Game item", async() => {
+    buyerInitialBalance = web3.fromWei(web3.eth.getBalance(buyer).toNumber(),'ether');
+    let buyItem = await product.buyItem(0,{
+        from: buyer,
+        value: web3.toWei(1,'ether')
+    });
+
+    buyerAfterBalance = web3.fromWei(web3.getBalance(buyer).toNumber(),'ether');
+
+});

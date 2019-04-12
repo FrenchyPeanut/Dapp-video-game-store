@@ -67,7 +67,8 @@ contract Product {
 
     function buyItem(uint id) public payable returns(bool){
         require(online == true);
-        require(item[id].itemPrice == msg.value)
+        require(item[id].itemPrice == msg.value);
+        require(item[id].sold != true);
         item[id].buyer = msg.sender;
         item[id].sold = true;
         return true;
