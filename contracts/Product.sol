@@ -62,14 +62,15 @@ contract Product {
             item[id].sold,
             item[id].sent,
             item[id].received
-            );
+        );
     }
 
-    function buyItem(uint id) public payable{
+    function buyItem(uint id) public payable returns(bool){
         require(online == true);
         require(item[id].itemPrice == msg.value)
         item[id].buyer = msg.sender;
         item[id].sold = true;
+        return true;
     }
 
     function receivedItem(uint id) public{
