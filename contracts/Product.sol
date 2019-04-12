@@ -1,6 +1,12 @@
 pragma solidity ^0.4.23;
 
 contract Product {
+
+    address owner;
+
+    constructor() public{
+        owner = msg.sender;
+    }
     
     struct Item  {
         address buyer;
@@ -15,6 +21,12 @@ contract Product {
     }
 
     Item[] public items;
+
+    event doStuff(
+        uint price,
+        string name,
+        address seller
+    );
 
     function newItem(string name, string description, uint price) public returns(uint) {
         require(price > 0, "Price must be greater than 0.");
@@ -32,6 +44,7 @@ contract Product {
                 received: false           
             })
         );
+        emit doStuff(price, name, msg.sender);
         assert(checkingLength + 1 == items.length);
         return items.length + 1;
     }
@@ -72,6 +85,11 @@ contract Product {
         require(item[id].seller == msg.sender);
         require(item[id].received == true);
         msg.sender.transfer(item[id].itemPrice);
+    }
+
+    function kill() public{
+        require(msg.sender == owner)
+        selfdestruct(owner);
     }
 
 }
