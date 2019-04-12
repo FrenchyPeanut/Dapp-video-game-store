@@ -33,7 +33,9 @@ contract Product {
         return items.length + 1;
     }
 
-    function getItem(uint id) public view returns(){
+    function getItem(uint id) public view returns(
+        uint, string, string, uint, bool, bool, bool
+    ){
         return( 
             item[id].id,
             item[id].itemName,
