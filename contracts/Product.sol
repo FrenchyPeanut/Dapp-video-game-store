@@ -3,6 +3,7 @@ pragma solidity ^0.4.23;
 contract Product {
 
     address owner;
+    bool online;
 
     constructor() public{
         owner = msg.sender;
@@ -29,6 +30,7 @@ contract Product {
     );
 
     function newItem(string name, string description, uint price) public returns(uint) {
+        require(online == true);
         require(price > 0, "Price must be greater than 0.");
         uint checkingLength = items.length;
         items.push(
@@ -64,6 +66,7 @@ contract Product {
     }
 
     function buyItem(uint id) public payable{
+        require(online == true);
         require(item[id].itemPrice == msg.value)
         item[id].buyer = msg.sender;
         item[id].sold = true;
@@ -82,14 +85,20 @@ contract Product {
     }
     
     function claimFunds(uint id) public{
+        require(online == true);
         require(item[id].seller == msg.sender);
         require(item[id].received == true);
         msg.sender.transfer(item[id].itemPrice);
     }
 
     function kill() public{
-        require(msg.sender == owner)
+        require(msg.sender == owner);
         selfdestruct(owner);
+    }
+
+    function switchStatus(bool status) public{
+        require(msg.sender == owner);
+        online = status;
     }
 
 }
