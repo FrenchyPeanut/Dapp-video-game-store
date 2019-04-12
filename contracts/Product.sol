@@ -47,6 +47,21 @@ contract Product {
             );
     }
 
- 
+    function buyItem(uint id) public payable{
+        item[id].buyer = msg.sender;
+        item[id].sold = true;
+    }
+
+    function receivedItem(uint id) public{
+        item[id].received = true;
+    }
+
+    function sentItem(uint id) public{
+        item[id].sent = true;
+    }
+    
+    function claimFunds(uint id) public{
+        msg.sender.transfer(item[id].itemPrice);
+    }
 
 }
