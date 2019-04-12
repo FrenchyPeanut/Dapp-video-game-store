@@ -28,7 +28,7 @@ it("Should have the Game item in the store", async() => {
     assert.isFalse(item[6], "The item should not be received.");
 });
 
-it("Should have the Game item in the store", async() => {
+it("Should fail if not bought", async() => {
     try{
         let sentItem = await product.sentItem(0, {
             from: seller
@@ -40,7 +40,7 @@ it("Should have the Game item in the store", async() => {
     }
 });
 
-it("Should buy an Game item", async() => {
+it("Should be able to buy a Game item", async() => {
     buyerInitialBalance = web3.fromWei(web3.eth.getBalance(buyer).toNumber(),'ether');
     let buyItem = await product.buyItem(0,{
         from: buyer,
@@ -48,5 +48,14 @@ it("Should buy an Game item", async() => {
     });
 
     buyerAfterBalance = web3.fromWei(web3.getBalance(buyer).toNumber(),'ether');
+    let itemBought = await product.getItem(0);
+    assert.isTrue(itemBought[4],"The Game should be marked as bought.");
+    // isAbove due to the txFees . . .
+    assert.isAbove(buyerInitialBalance - buyerAfterBalance, 1, "Should have paid 1 ether.");
 
 });
+
+
+
+
+
