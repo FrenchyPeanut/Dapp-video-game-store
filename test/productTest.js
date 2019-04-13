@@ -22,7 +22,7 @@ contract('Product', async(accounts) => {
         assert.equal(item[1], "MegaMan", "The item should have the correct name.");
         assert.equal(item[2], "Made by Capcom", "The item should have the correct description.");
         // item[3].toNumber() now throws an error due to precision errors.
-        assert.equal(web3.fromWei(item[3].toString(),'ether'), 1, "The item should have the correct price.");
+        assert.equal(web3.utils.fromWei(item[3].toString(),'ether'), 2, "The item should have the correct price.");
         assert.isFalse(item[4], "The item should not be sold.");
         assert.isFalse(item[5], "The item should not be sent.");
         assert.isFalse(item[6], "The item should not be received.");
@@ -43,20 +43,20 @@ contract('Product', async(accounts) => {
     it("Should be able to buy a Game item", async() => {
         console.log("Starting test: BUYING GAME");
         // buyerInitialBalance = web3.fromWei(web3.eth.getBalance(buyer).toNumber(),'ether');
-        const buyerInitialBalanceInWei = await web3.eth.getBalance(buyer)
+        const buyerInitialBalanceInWei = await web3.eth.getBalance(buyer);
         buyerInitialBalance = web3.utils.fromWei(buyerInitialBalanceInWei, 'ether')
         console.log("Buyer funds available:" + buyerInitialBalance);
         let buyItem = await product.buyItem(0,{
             from: buyer,
-            value: web3.toWei(1,'ether')
+            value: web3.utils.toWei('2','ether')
         });
         console.log("item to buy: " + buyItem);
-
-        buyerAfterBalance = web3.fromWei(web3.getBalance(buyer).toNumber(),'ether');
+        buyerAfterBalanceInWei = await web3.eth.getBalance(buyer);
+        buyerAfterBalance = web3.utils.fromWei(buyerAfterBalanceInWei,'ether');
         let itemBought = await product.getItem(0);
         assert.isTrue(itemBought[4],"The Game should be marked as bought.");
         // isAbove due to the txFees . . .
-        assert.isAbove(buyerInitialBalance - buyerAfterBalance, 1, "Should have paid 1 ether.");
+        assert.isAbove(buyerInitialBalance - buyerAfterBalance, 2, "Should have paid 2 ether.");
 
     });
 
